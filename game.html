@@ -12,8 +12,6 @@
     --nes-light: #d6d6d6;
     --nes-dark: #333336;
     --nes-pad: #1a1a1d;
-    --nes-red: #d92323;
-    --nes-red-dark: #941313;
   }
 
   * {
@@ -42,8 +40,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    padding: 6px 8px 10px;
+    gap: 8px;
+    padding: 6px 8px 8px;
   }
 
   .cabinet-screen {
@@ -204,49 +202,127 @@
     to { opacity: 0.25; }
   }
 
-  /* Authentic NES Controller */
+  /* NES Controller with Large Centered D-Pad & Start on the Right */
   .nes-controller {
     width: 100%;
     max-width: 420px;
     background: var(--nes-light);
     border-radius: 10px;
-    padding: 12px;
+    padding: 10px;
     box-shadow:
-      0 8px 0 #8a8a8a,
-      0 14px 24px rgba(0, 0, 0, 0.65);
+      0 7px 0 #8a8a8a,
+      0 12px 22px rgba(0, 0, 0, 0.65);
     touch-action: none;
   }
 
   .nes-inner {
     background: var(--nes-dark);
     border-radius: 6px;
-    padding: 12px 14px;
+    padding: 10px 14px;
     display: grid;
-    grid-template-columns: 104px 1fr 112px;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
   }
 
+  .side-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 100%;
+  }
+
+  .nes-brand {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 900;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: #e03b3b;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  .nes-stripe {
+    width: 100%;
+    height: 6px;
+    background: #8a8a8e;
+    border-radius: 2px;
+    opacity: 0.4;
+  }
+
+  .pill-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .pill-label {
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 900;
+    color: #e03b3b;
+    letter-spacing: 0.8px;
+  }
+
+  .pill-plate {
+    background: var(--nes-light);
+    border-radius: 6px;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.32);
+  }
+
+  .pill-btn {
+    width: 54px;
+    height: 20px;
+    border-radius: 10px;
+    background: #232327;
+    border: 1px solid #000;
+    cursor: pointer;
+    box-shadow: 0 3px 0 #555;
+    transition: transform 0.05s, box-shadow 0.05s;
+    touch-action: none;
+  }
+
+  .pill-btn.start-pill {
+    background: radial-gradient(circle at 35% 30%, #ff4747, #d92323);
+    border-color: #8b1212;
+    box-shadow: 0 3px 0 #5c0c0c;
+  }
+
+  .pill-btn.pressed {
+    transform: translateY(2px);
+    box-shadow: none;
+    filter: brightness(1.18);
+  }
+
+  /* Larger Centered D-Pad */
   .dpad {
     position: relative;
-    width: 96px;
-    height: 96px;
+    width: 126px;
+    height: 126px;
     margin: 0 auto;
     touch-action: none;
   }
 
   .dpad-btn {
     position: absolute;
-    width: 32px;
-    height: 32px;
+    width: 42px;
+    height: 42px;
     background: var(--nes-pad);
     border: 1px solid #09090a;
-    color: #555;
+    color: #666;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
+    font-size: 17px;
     font-weight: bold;
     cursor: pointer;
     box-shadow: inset 0 2px 2px rgba(255, 255, 255, 0.14), 0 3px 0 #0b0b0c;
@@ -261,17 +337,17 @@
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8), 0 1px 0 #0b0b0c;
   }
 
-  .dpad-up    { top: 0;    left: 32px; border-radius: 5px 5px 0 0; }
-  .dpad-down  { bottom: 0; left: 32px; border-radius: 0 0 5px 5px; }
-  .dpad-left  { top: 32px; left: 0;    border-radius: 5px 0 0 5px; }
-  .dpad-right { top: 32px; right: 0;   border-radius: 0 5px 5px 0; }
+  .dpad-up    { top: 0;    left: 42px; border-radius: 6px 6px 0 0; }
+  .dpad-down  { bottom: 0; left: 42px; border-radius: 0 0 6px 6px; }
+  .dpad-left  { top: 42px; left: 0;    border-radius: 6px 0 0 6px; }
+  .dpad-right { top: 42px; right: 0;   border-radius: 0 6px 6px 0; }
 
   .dpad-center {
     position: absolute;
-    top: 32px;
-    left: 32px;
-    width: 32px;
-    height: 32px;
+    top: 42px;
+    left: 42px;
+    width: 42px;
+    height: 42px;
     background: var(--nes-pad);
     display: flex;
     align-items: center;
@@ -281,130 +357,11 @@
 
   .dpad-center::after {
     content: "";
-    width: 18px;
-    height: 18px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     background: radial-gradient(circle at 35% 35%, #111, #26262a);
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.9);
-  }
-
-  .nes-center-col {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    height: 96px;
-    gap: 6px;
-  }
-
-  .nes-brand {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: 900;
-    font-size: 11px;
-    letter-spacing: 1px;
-    color: #d92323;
-    text-transform: uppercase;
-    margin-bottom: auto;
-  }
-
-  .nes-stripe {
-    width: 100%;
-    height: 6px;
-    background: #8a8a8e;
-    border-radius: 2px;
-    opacity: 0.45;
-  }
-
-  .mid-labels {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    font-family: Arial, sans-serif;
-    font-size: 8px;
-    font-weight: 800;
-    color: #e03b3b;
-    letter-spacing: 0.6px;
-  }
-
-  .mid-buttons-plate {
-    width: 100%;
-    background: var(--nes-light);
-    border-radius: 5px;
-    padding: 7px 6px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.3);
-  }
-
-  .pill-btn {
-    width: 34px;
-    height: 13px;
-    border-radius: 7px;
-    background: #232327;
-    border: 1px solid #000;
-    cursor: pointer;
-    box-shadow: 0 2px 0 #555;
-    transition: transform 0.05s;
-    touch-action: none;
-  }
-
-  .pill-btn.pressed {
-    transform: translateY(2px);
-    box-shadow: none;
-    background: #444;
-  }
-
-  .ab-group {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 10px;
-    height: 96px;
-    padding-bottom: 6px;
-  }
-
-  .ab-slot {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .ab-well {
-    width: 46px;
-    height: 46px;
-    background: var(--nes-light);
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35);
-  }
-
-  .round-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #ff4747, var(--nes-red));
-    border: 2px solid var(--nes-red-dark);
-    cursor: pointer;
-    box-shadow: 0 3px 0 #5c0c0c;
-    transition: transform 0.05s, box-shadow 0.05s;
-    touch-action: none;
-  }
-
-  .round-btn.pressed {
-    transform: translateY(2px);
-    box-shadow: 0 1px 0 #5c0c0c;
-    filter: brightness(1.18);
-  }
-
-  .ab-label {
-    font-family: Arial, sans-serif;
-    font-size: 11px;
-    font-weight: 900;
-    color: #e03b3b;
   }
 
   .legend {
@@ -420,16 +377,16 @@
 
   @media (max-width: 400px) {
     .nes-inner {
-      grid-template-columns: 92px 1fr 100px;
       padding: 10px;
+      gap: 8px;
     }
-    .dpad { width: 84px; height: 84px; }
-    .dpad-btn { width: 28px; height: 28px; }
-    .dpad-up, .dpad-down, .dpad-center { left: 28px; }
-    .dpad-left, .dpad-right, .dpad-center { top: 28px; }
-    .dpad-center { width: 28px; height: 28px; }
-    .ab-well { width: 42px; height: 42px; }
-    .round-btn { width: 32px; height: 32px; }
+    .dpad { width: 114px; height: 114px; }
+    .dpad-btn { width: 38px; height: 38px; font-size: 15px; }
+    .dpad-up, .dpad-down, .dpad-center { left: 38px; }
+    .dpad-left, .dpad-right, .dpad-center { top: 38px; }
+    .dpad-center { width: 38px; height: 38px; }
+    .pill-plate { padding: 6px 8px; }
+    .pill-btn { width: 44px; height: 18px; }
   }
 </style>
 </head>
@@ -477,7 +434,7 @@
 
           <div class="overlay-hint" id="overlayHint">
             Move: Arrow Keys / WASD / NES D-Pad<br />
-            Start &amp; Pause: START / Enter / A
+            Start &amp; Pause: START / Enter
           </div>
         </div>
       </div>
@@ -485,6 +442,19 @@
 
     <div class="nes-controller" id="nesController">
       <div class="nes-inner">
+        <!-- Left Side: Sound Toggle -->
+        <div class="side-col">
+          <div class="nes-stripe"></div>
+          <div class="pill-slot">
+            <div class="pill-label">SELECT</div>
+            <div class="pill-plate">
+              <div class="pill-btn" id="btn-SELECT" title="Toggle Sound"></div>
+            </div>
+          </div>
+          <div class="nes-stripe"></div>
+        </div>
+
+        <!-- Center: Larger Movement D-Pad -->
         <div class="dpad" id="dpad">
           <div class="dpad-btn dpad-up" data-dir="UP" id="btn-UP">▲</div>
           <div class="dpad-btn dpad-left" data-dir="LEFT" id="btn-LEFT">◀</div>
@@ -493,40 +463,23 @@
           <div class="dpad-btn dpad-down" data-dir="DOWN" id="btn-DOWN">▼</div>
         </div>
 
-        <div class="nes-center-col">
+        <!-- Right Side: Start / Pause -->
+        <div class="side-col">
           <div class="nes-brand">ARCADE PAD</div>
-          <div class="nes-stripe"></div>
-          <div class="mid-labels">
-            <span>SELECT</span>
-            <span>START</span>
-          </div>
-          <div class="mid-buttons-plate">
-            <div class="pill-btn" id="btn-SELECT" title="Toggle Sound"></div>
-            <div class="pill-btn" id="btn-START" title="Start / Pause"></div>
+          <div class="pill-slot">
+            <div class="pill-label">START</div>
+            <div class="pill-plate">
+              <div class="pill-btn start-pill" id="btn-START" title="Start / Pause"></div>
+            </div>
           </div>
           <div class="nes-stripe"></div>
-        </div>
-
-        <div class="ab-group">
-          <div class="ab-slot">
-            <div class="ab-well">
-              <div class="round-btn" id="btn-B" title="Pause / Resume"></div>
-            </div>
-            <div class="ab-label">B</div>
-          </div>
-          <div class="ab-slot">
-            <div class="ab-well">
-              <div class="round-btn" id="btn-A" title="Start / Confirm"></div>
-            </div>
-            <div class="ab-label">A</div>
-          </div>
         </div>
       </div>
     </div>
 
     <div class="legend">
       <b>Keyboard:</b> Arrows / WASD = Move &bull; <b>Enter/Space</b> = Start &bull; <b>P</b> = Pause &bull; <b>M</b> = <span id="soundLabel">Sound ON</span><br />
-      <b>NES Pad:</b> D-Pad = Move &bull; <b>START/A</b> = Start &bull; <b>B</b> = Pause &bull; <b>SELECT</b> = Sound
+      <b>NES Pad:</b> D-Pad = Move &bull; <b>START</b> = Start / Pause &bull; <b>SELECT</b> = Sound
     </div>
   </div>
 
@@ -899,7 +852,7 @@
   function togglePause() {
     if (gameState === "PLAYING") {
       gameState = "PAUSED";
-      showOverlay("PAUSED", "PRESS START OR B", "Press START, B, P, or Enter to Resume", false);
+      showOverlay("PAUSED", "PRESS START OR P", "Press START, P, or Enter to Resume", false);
     } else if (gameState === "PAUSED") {
       hideOverlay();
       gameState = "PLAYING";
@@ -1593,7 +1546,7 @@
       handleStartAction();
     } else if (e.code === "KeyP") {
       e.preventDefault();
-      setPressed("btn-B", true);
+      setPressed("btn-START", true);
       togglePause();
     } else if (e.code === "KeyM") {
       e.preventDefault();
@@ -1608,8 +1561,7 @@
 
     const dirKey = KEY_TO_DIR[e.code] || KEY_TO_DIR[e.key];
     if (dirKey) setPressed("btn-" + dirKey, false);
-    if (e.code === "Enter" || e.code === "Space") setPressed("btn-START", false);
-    if (e.code === "KeyP") setPressed("btn-B", false);
+    if (e.code === "Enter" || e.code === "Space" || e.code === "KeyP") setPressed("btn-START", false);
     if (e.code === "KeyM") setPressed("btn-SELECT", false);
   }
 
@@ -1678,11 +1630,8 @@
   });
 
   bindButton("btn-START", handleStartAction);
-  bindButton("btn-A", handleStartAction);
-  bindButton("btn-B", togglePause);
   bindButton("btn-SELECT", toggleMute);
 
-  // Keep clicks inside the name box from auto-starting before the user finishes typing
   nameBoxEl.addEventListener("click", (e) => e.stopPropagation());
   playerNameInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
