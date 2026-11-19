@@ -46,7 +46,6 @@
     padding: 6px 8px 10px;
   }
 
-  /* CRT Arcade Bezel */
   .cabinet-screen {
     width: 100%;
     background: #000;
@@ -149,7 +148,6 @@
     to { opacity: 0.25; }
   }
 
-  /* Authentic NES Controller */
   .nes-controller {
     width: 100%;
     max-width: 420px;
@@ -173,7 +171,6 @@
     box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
   }
 
-  /* D-Pad */
   .dpad {
     position: relative;
     width: 96px;
@@ -234,7 +231,6 @@
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.9);
   }
 
-  /* Center Select / Start Section */
   .nes-center-col {
     display: flex;
     flex-direction: column;
@@ -302,7 +298,6 @@
     background: #444;
   }
 
-  /* B & A Buttons */
   .ab-group {
     display: flex;
     justify-content: space-between;
@@ -416,10 +411,8 @@
       </div>
     </div>
 
-    <!-- Authentic NES-004 Style Controller -->
     <div class="nes-controller" id="nesController">
       <div class="nes-inner">
-        <!-- D-PAD -->
         <div class="dpad" id="dpad">
           <div class="dpad-btn dpad-up" data-dir="UP" id="btn-UP">▲</div>
           <div class="dpad-btn dpad-left" data-dir="LEFT" id="btn-LEFT">◀</div>
@@ -428,7 +421,6 @@
           <div class="dpad-btn dpad-down" data-dir="DOWN" id="btn-DOWN">▼</div>
         </div>
 
-        <!-- SELECT / START -->
         <div class="nes-center-col">
           <div class="nes-brand">ARCADE PAD</div>
           <div class="nes-stripe"></div>
@@ -443,7 +435,6 @@
           <div class="nes-stripe"></div>
         </div>
 
-        <!-- B & A BUTTONS -->
         <div class="ab-group">
           <div class="ab-slot">
             <div class="ab-well">
@@ -518,6 +509,14 @@
     LEFT:  { x: -1, y:  0, angle:  Math.PI },
     RIGHT: { x:  1, y:  0, angle:  0 }
   };
+
+  function oppositeDir(d) {
+    if (d.x === 1) return DIRS.LEFT;
+    if (d.x === -1) return DIRS.RIGHT;
+    if (d.y === 1) return DIRS.UP;
+    if (d.y === -1) return DIRS.DOWN;
+    return d;
+  }
 
   // --- Retro 8-bit Web Audio Synthesizer ---
   let audioCtx = null;
@@ -608,7 +607,6 @@
   let level = 1;
   let lives = 3;
 
-  // States: "TITLE", "READY", "PLAYING", "PAUSED", "DYING", "LEVEL_CLEAR", "GAME_OVER"
   let gameState = "TITLE";
   let stateTimer = 0;
   let hitStopTimer = 0;
@@ -781,13 +779,11 @@
     if (!dir) return;
     pacman.nextDir = dir;
 
-    // Allow immediate 180-degree reversal mid-corridor
     if (dir.x === -pacman.dir.x && dir.y === -pacman.dir.y) {
       pacman.dir = dir;
     }
   }
 
-  // --- Movement Helpers ---
   function wrapHorizontal(entity) {
     if (entity.x < -TILE / 2) entity.x = COLS * TILE + TILE / 2;
     else if (entity.x > COLS * TILE + TILE / 2) entity.x = -TILE / 2;
@@ -801,12 +797,9 @@
 
     const distToCenterX = center.x - pacman.x;
     const distToCenterY = center.y - pacman.y;
-
-    // Check if near tile center to turn or stop at wall
     const nearCenter = Math.abs(distToCenterX) <= speed + 0.5 && Math.abs(distToCenterY) <= speed + 0.5;
 
     if (nearCenter) {
-      // Try buffered turn
       if (pacman.nextDir !== pacman.dir) {
         if (!isWallForPacman(col + pacman.nextDir.x, row + pacman.nextDir.y)) {
           pacman.x = center.x;
@@ -815,9 +808,7 @@
         }
       }
 
-      // Stop if wall ahead
       if (isWallForPacman(col + pacman.dir.x, row + pacman.dir.y)) {
-        // Move only up to center
         if (pacman.dir.x > 0 && pacman.x < center.x) pacman.x = Math.min(center.x, pacman.x + speed);
         else if (pacman.dir.x < 0 && pacman.x > center.x) pacman.x = Math.max(center.x, pacman.x - speed);
         else if (pacman.dir.y > 0 && pacman.y < center.y) pacman.y = Math.min(center.y, pacman.y + speed);
@@ -826,7 +817,6 @@
       }
     }
 
-    // Align perpendicular axis smoothly
     if (pacman.dir.x !== 0) pacman.y = center.y;
     if (pacman.dir.y !== 0) pacman.x = center.x;
 
@@ -834,7 +824,6 @@
     pacman.y += pacman.dir.y * speed;
     wrapHorizontal(pacman);
 
-    // Mouth animation
     if (pacman.mouthOpening) {
       pacman.mouth += dt * 4.5;
       if (pacman.mouth >= 0.42) pacman.mouthOpening = false;
@@ -843,7 +832,6 @@
       if (pacman.mouth <= 0.04) pacman.mouthOpening = true;
     }
 
-    // Eat pellets
     const eCol = Math.floor(pacman.x / TILE);
     const eRow = Math.floor(pacman.y / TILE);
     if (eCol >= 0 && eCol < COLS && eRow >= 0 && eRow < ROWS) {
@@ -863,12 +851,11 @@
           ghosts.forEach(g => {
             if (g.state === "chase" || g.state === "scatter") {
               g.state = "frightened";
-              g.dir = { x: -g.dir.x, y: -g.dir.y, angle: 0 };
+              g.dir = oppositeDir(g.dir);
             }
           });
         }
 
-        // Spawn bonus fruit at milestones
         const eaten = pelletsTotal - pelletsRemaining;
         if (eaten === 60 && !fruitSpawned1) {
           fruitSpawned1 = true;
@@ -888,7 +875,6 @@
       }
     }
 
-    // Eat fruit
     if (fruit) {
       const dx = pacman.x - fruit.x;
       const dy = pacman.y - fruit.y;
@@ -908,7 +894,6 @@
     fruit = { x: pos.x, y: pos.y, points: pts, timer: 9.0 };
   }
 
-  // --- Ghost AI ---
   function bfsNextDir(startCol, startRow, targetCol, targetRow) {
     const queue = [[startCol, startRow, null]];
     const visited = new Set([startCol + "," + startRow]);
@@ -953,7 +938,6 @@
       const aheadRow = pRow + pacman.dir.y * 2;
       return { col: aheadCol + (aheadCol - bCol), row: aheadRow + (aheadRow - bRow) };
     }
-    // Clyde
     const gCol = Math.floor(ghost.x / TILE);
     const gRow = Math.floor(ghost.y / TILE);
     const dist = Math.hypot(gCol - pCol, gRow - pRow);
@@ -1002,14 +986,12 @@
       if (g.state === "house") {
         if (g.releaseTimer > 0) {
           g.releaseTimer -= dt;
-          // Gentle bob inside house
           g.y += g.bobDir * 24 * dt;
           const midY = 9 * TILE + TILE / 2;
           if (g.y > midY + 4) g.bobDir = -1;
           if (g.y < midY - 4) g.bobDir = 1;
           continue;
         }
-        // Exit to center x=9, then up to row 7
         const exitX = 9 * TILE + TILE / 2;
         const exitY = 7 * TILE + TILE / 2;
         const exitSpeed = 75 * dt;
@@ -1043,22 +1025,24 @@
       else if (g.state === "eaten") speed = 200;
 
       const step = speed * dt;
-      const prevCol = Math.floor(g.x / TILE);
-      const prevRow = Math.floor(g.y / TILE);
+      const prevX = g.x;
+      const prevY = g.y;
 
       g.x += g.dir.x * step;
       g.y += g.dir.y * step;
-      wrapHorizontal(g);
 
       const col = Math.max(0, Math.min(COLS - 1, Math.floor(g.x / TILE)));
       const row = Math.max(0, Math.min(ROWS - 1, Math.floor(g.y / TILE)));
       const center = tileCenter(col, row);
 
-      // Check if ghost crossed tile center
-      const crossedX = g.dir.x !== 0 && ((g.dir.x > 0 && g.x >= center.x && g.x - step <= center.x) || (g.dir.x < 0 && g.x <= center.x && g.x + step >= center.x));
-      const crossedY = g.dir.y !== 0 && ((g.dir.y > 0 && g.y >= center.y && g.y - step <= center.y) || (g.dir.y < 0 && g.y <= center.y && g.y + step >= center.y));
+      const crossedX =
+        (g.dir.x > 0 && prevX < center.x && g.x >= center.x) ||
+        (g.dir.x < 0 && prevX > center.x && g.x <= center.x);
+      const crossedY =
+        (g.dir.y > 0 && prevY < center.y && g.y >= center.y) ||
+        (g.dir.y < 0 && prevY > center.y && g.y <= center.y);
 
-      if (crossedX || crossedY || (col !== prevCol && row !== prevRow)) {
+      if (crossedX || crossedY) {
         g.x = center.x;
         g.y = center.y;
 
@@ -1069,16 +1053,20 @@
 
         g.dir = chooseGhostDir(g, col, row);
       } else {
-        // Safety clamp against wall
+        if (g.dir.x !== 0) g.y = center.y;
+        if (g.dir.y !== 0) g.x = center.x;
+
         if (isWallForGhost(col + g.dir.x, row + g.dir.y)) {
-          if ((g.dir.x > 0 && g.x > center.x) || (g.dir.x < 0 && g.x < center.x) ||
-              (g.dir.y > 0 && g.y > center.y) || (g.dir.y < 0 && g.y < center.y)) {
+          if ((g.dir.x > 0 && g.x >= center.x) || (g.dir.x < 0 && g.x <= center.x) ||
+              (g.dir.y > 0 && g.y >= center.y) || (g.dir.y < 0 && g.y <= center.y)) {
             g.x = center.x;
             g.y = center.y;
             g.dir = chooseGhostDir(g, col, row);
           }
         }
       }
+
+      wrapHorizontal(g);
     }
   }
 
@@ -1107,9 +1095,7 @@
     }
   }
 
-  // --- Update Loop ---
   function update(dt) {
-    // Update floating score popups
     popups = popups.filter(p => {
       p.timer -= dt;
       p.y -= 18 * dt;
@@ -1160,7 +1146,6 @@
 
     if (gameState !== "PLAYING") return;
 
-    // Mode timers
     if (frightenedTimer > 0) {
       frightenedTimer -= dt;
       if (frightenedTimer <= 0) {
@@ -1178,7 +1163,7 @@
         ghosts.forEach(g => {
           if (g.state === "chase" || g.state === "scatter") {
             g.state = globalMode;
-            g.dir = { x: -g.dir.x, y: -g.dir.y, angle: 0 };
+            g.dir = oppositeDir(g.dir);
           }
         });
       }
@@ -1194,7 +1179,6 @@
     checkCollisions();
   }
 
-  // --- Rendering ---
   function drawMaze() {
     const flash = gameState === "LEVEL_CLEAR" && Math.floor(stateTimer * 8) % 2 === 0;
     const wallColor = flash ? "#ffffff" : "#2121de";
@@ -1234,7 +1218,6 @@
 
   function drawFruit() {
     if (!fruit) return;
-    // Retro cherry icon
     ctx.fillStyle = "#ff2244";
     ctx.beginPath();
     ctx.arc(fruit.x - 4, fruit.y + 3, 4.5, 0, Math.PI * 2);
@@ -1300,7 +1283,6 @@
       ctx.fill();
     }
 
-    // Eyes
     if (g.state === "frightened") {
       ctx.fillStyle = "#ffb8ae";
       ctx.fillRect(x - 4, y - 3, 2.5, 2.5);
@@ -1349,7 +1331,6 @@
     }
   }
 
-  // --- Main Loop ---
   let lastTime = performance.now();
   function loop(now) {
     const dt = Math.min(0.05, (now - lastTime) / 1000);
@@ -1359,7 +1340,6 @@
     requestAnimationFrame(loop);
   }
 
-  // --- Visual Button Sync ---
   function setPressed(id, active) {
     const el = document.getElementById(id);
     if (!el) return;
@@ -1367,7 +1347,6 @@
     else el.classList.remove("pressed");
   }
 
-  // --- Keyboard Controls (Arrows + WASD + Enter/Space/P/M) ---
   const KEY_TO_DIR = {
     ArrowUp: "UP",    KeyW: "UP",
     ArrowDown: "DOWN", KeyS: "DOWN",
@@ -1414,7 +1393,6 @@
   window.addEventListener("keydown", onKeyDown, { passive: false });
   window.addEventListener("keyup", onKeyUp);
 
-  // Also attempt to listen on parent Streamlit window if same-origin so keyboard works immediately
   try {
     if (window.parent && window.parent !== window) {
       window.parent.addEventListener("keydown", onKeyDown, { passive: false });
@@ -1422,7 +1400,6 @@
     }
   } catch (_) {}
 
-  // --- On-Screen NES Controller Pointer / Touch Bindings ---
   function bindButton(id, onPress) {
     const el = document.getElementById(id);
     if (!el) return;
@@ -1451,7 +1428,6 @@
     });
   });
 
-  // Allow sliding thumb across D-Pad on touch devices
   const dpadEl = document.getElementById("dpad");
   let activeDpadDir = null;
   dpadEl.addEventListener("touchmove", (e) => {
@@ -1487,7 +1463,6 @@
     handleStartAction();
   });
 
-  // Boot
   cloneMaze();
   resetActors();
   updateHUD();
