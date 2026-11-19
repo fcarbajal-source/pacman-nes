@@ -3,15 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>PAC-MAN NES</title>
+<title>PAC-MAN</title>
 <style>
   :root {
     --bg: #0b0c10;
-    --cabinet: #151824;
     --bezel: #222638;
-    --nes-light: #d6d6d6;
-    --nes-dark: #333336;
-    --nes-pad: #1a1a1d;
   }
 
   * {
@@ -40,8 +36,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
-    padding: 4px 8px 6px;
+    gap: 8px;
+    padding: 6px 8px 8px;
   }
 
   .cabinet-screen {
@@ -93,6 +89,7 @@
     background: #000;
     border-radius: 4px;
     overflow: hidden;
+    touch-action: none;
   }
 
   canvas {
@@ -100,6 +97,35 @@
     height: 100%;
     display: block;
     image-rendering: pixelated;
+    touch-action: none;
+  }
+
+  .cabinet-bar {
+    width: 100%;
+    max-width: 380px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding-top: 8px;
+  }
+
+  .util-btn {
+    padding: 5px 12px;
+    border-radius: 5px;
+    border: 1px solid #383e5c;
+    background: #141724;
+    color: #d8dee9;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+  }
+
+  .util-btn:hover {
+    border-color: #ffcc00;
+    color: #ffcc00;
   }
 
   .overlay {
@@ -202,192 +228,15 @@
     to { opacity: 0.25; }
   }
 
-  /* NES Controller with +25% Larger Centered D-Pad & Compact Select/Start */
-  .nes-controller {
-    width: 100%;
-    max-width: 420px;
-    background: var(--nes-light);
-    border-radius: 10px;
-    padding: 8px;
-    box-shadow:
-      0 6px 0 #8a8a8a,
-      0 11px 20px rgba(0, 0, 0, 0.65);
-    touch-action: none;
-  }
-
-  .nes-inner {
-    background: var(--nes-dark);
-    border-radius: 6px;
-    padding: 8px 12px;
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    gap: 10px;
-    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
-  }
-
-  .side-col {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    height: 100%;
-  }
-
-  .nes-brand {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: 900;
-    font-size: 9px;
-    letter-spacing: 0.9px;
-    color: #e03b3b;
-    text-transform: uppercase;
-    text-align: center;
-  }
-
-  .nes-stripe {
-    width: 100%;
-    height: 5px;
-    background: #8a8a8e;
-    border-radius: 2px;
-    opacity: 0.4;
-  }
-
-  .pill-slot {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    width: 100%;
-  }
-
-  .pill-label {
-    font-family: Arial, sans-serif;
-    font-size: 9px;
-    font-weight: 900;
-    color: #e03b3b;
-    letter-spacing: 0.7px;
-  }
-
-  .pill-plate {
-    background: var(--nes-light);
-    border-radius: 5px;
-    padding: 5px 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.32);
-  }
-
-  .pill-btn {
-    width: 34px;
-    height: 13px;
-    border-radius: 7px;
-    background: #232327;
-    border: 1px solid #000;
-    cursor: pointer;
-    box-shadow: 0 2px 0 #555;
-    transition: transform 0.05s, box-shadow 0.05s;
-    touch-action: none;
-  }
-
-  .pill-btn.start-pill {
-    background: radial-gradient(circle at 35% 30%, #ff4747, #d92323);
-    border-color: #8b1212;
-    box-shadow: 0 2px 0 #5c0c0c;
-  }
-
-  .pill-btn.pressed {
-    transform: translateY(2px);
-    box-shadow: none;
-    filter: brightness(1.18);
-  }
-
-  /* +25% Larger Centered D-Pad (156x156, 52px arms) */
-  .dpad {
-    position: relative;
-    width: 156px;
-    height: 156px;
-    margin: 0 auto;
-    touch-action: none;
-  }
-
-  .dpad-btn {
-    position: absolute;
-    width: 52px;
-    height: 52px;
-    background: var(--nes-pad);
-    border: 1px solid #09090a;
-    color: #666;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: inset 0 2px 2px rgba(255, 255, 255, 0.14), 0 3px 0 #0b0b0c;
-    transition: transform 0.04s, box-shadow 0.04s;
-    touch-action: none;
-  }
-
-  .dpad-btn.pressed {
-    background: #2b2b30;
-    color: #ffcc00;
-    transform: translateY(2px);
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8), 0 1px 0 #0b0b0c;
-  }
-
-  .dpad-up    { top: 0;     left: 52px; border-radius: 7px 7px 0 0; }
-  .dpad-down  { bottom: 0;  left: 52px; border-radius: 0 0 7px 7px; }
-  .dpad-left  { top: 52px;  left: 0;    border-radius: 7px 0 0 7px; }
-  .dpad-right { top: 52px;  right: 0;   border-radius: 0 7px 7px 0; }
-
-  .dpad-center {
-    position: absolute;
-    top: 52px;
-    left: 52px;
-    width: 52px;
-    height: 52px;
-    background: var(--nes-pad);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-  }
-
-  .dpad-center::after {
-    content: "";
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, #111, #26262a);
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.9);
-  }
-
   .legend {
     font-size: 11px;
     color: #9ba3b4;
     text-align: center;
-    line-height: 1.35;
+    line-height: 1.4;
   }
 
   .legend b {
     color: #e5e9f0;
-  }
-
-  @media (max-width: 400px) {
-    .nes-inner {
-      padding: 8px;
-      gap: 6px;
-    }
-    .dpad { width: 144px; height: 144px; }
-    .dpad-btn { width: 48px; height: 48px; font-size: 18px; }
-    .dpad-up, .dpad-down, .dpad-center { left: 48px; }
-    .dpad-left, .dpad-right, .dpad-center { top: 48px; }
-    .dpad-center { width: 48px; height: 48px; }
-    .dpad-center::after { width: 24px; height: 24px; }
-    .pill-plate { padding: 4px 6px; }
-    .pill-btn { width: 30px; height: 11px; }
   }
 </style>
 </head>
@@ -434,53 +283,21 @@
           </div>
 
           <div class="overlay-hint" id="overlayHint">
-            Move: Arrow Keys / WASD / NES D-Pad<br />
-            Start &amp; Pause: START / Enter
+            Move: Arrow Keys / WASD / Swipe or Tap Screen<br />
+            Start &amp; Pause: Enter / P
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="nes-controller" id="nesController">
-      <div class="nes-inner">
-        <!-- Left Side: Compact Sound Toggle -->
-        <div class="side-col">
-          <div class="nes-stripe"></div>
-          <div class="pill-slot">
-            <div class="pill-label">SELECT</div>
-            <div class="pill-plate">
-              <div class="pill-btn" id="btn-SELECT" title="Toggle Sound"></div>
-            </div>
-          </div>
-          <div class="nes-stripe"></div>
-        </div>
-
-        <!-- Center: +25% Larger Movement D-Pad -->
-        <div class="dpad" id="dpad">
-          <div class="dpad-btn dpad-up" data-dir="UP" id="btn-UP">▲</div>
-          <div class="dpad-btn dpad-left" data-dir="LEFT" id="btn-LEFT">◀</div>
-          <div class="dpad-center"></div>
-          <div class="dpad-btn dpad-right" data-dir="RIGHT" id="btn-RIGHT">▶</div>
-          <div class="dpad-btn dpad-down" data-dir="DOWN" id="btn-DOWN">▼</div>
-        </div>
-
-        <!-- Right Side: Compact Start / Pause -->
-        <div class="side-col">
-          <div class="nes-brand">ARCADE PAD</div>
-          <div class="pill-slot">
-            <div class="pill-label">START</div>
-            <div class="pill-plate">
-              <div class="pill-btn start-pill" id="btn-START" title="Start / Pause"></div>
-            </div>
-          </div>
-          <div class="nes-stripe"></div>
-        </div>
+      <div class="cabinet-bar">
+        <button type="button" class="util-btn" id="pauseBtn">PAUSE</button>
+        <button type="button" class="util-btn" id="soundBtn">SOUND: ON</button>
       </div>
     </div>
 
     <div class="legend">
-      <b>Keyboard:</b> Arrows / WASD = Move &bull; <b>Enter/Space</b> = Start &bull; <b>P</b> = Pause &bull; <b>M</b> = <span id="soundLabel">Sound ON</span><br />
-      <b>NES Pad:</b> D-Pad = Move &bull; <b>START</b> = Start / Pause &bull; <b>SELECT</b> = Sound
+      <b>Keyboard:</b> Arrows / WASD = Move &bull; <b>Enter/Space</b> = Start &bull; <b>P</b> = Pause &bull; <b>M</b> = Mute<br />
+      <b>Touchscreen:</b> Swipe anywhere or Tap in the direction you want to turn
     </div>
   </div>
 
@@ -494,7 +311,8 @@
   const highScoreEl = document.getElementById("highScoreVal");
   const levelEl = document.getElementById("levelVal");
   const livesEl = document.getElementById("livesVal");
-  const soundLabelEl = document.getElementById("soundLabel");
+  const pauseBtn = document.getElementById("pauseBtn");
+  const soundBtn = document.getElementById("soundBtn");
 
   const overlayEl = document.getElementById("overlay");
   const overlayTitleEl = document.getElementById("overlayTitle");
@@ -649,7 +467,7 @@
 
   function toggleMute() {
     soundMuted = !soundMuted;
-    soundLabelEl.textContent = soundMuted ? "Sound OFF" : "Sound ON";
+    soundBtn.textContent = soundMuted ? "SOUND: OFF" : "SOUND: ON";
     if (!soundMuted) playTone(660, 0.08, "square", 0.05);
   }
 
@@ -841,6 +659,7 @@
     popups = [];
     particles = [];
     shakeTimer = 0;
+    pauseBtn.textContent = "PAUSE";
     cloneMaze();
     resetActors();
     updateHUD();
@@ -853,9 +672,11 @@
   function togglePause() {
     if (gameState === "PLAYING") {
       gameState = "PAUSED";
-      showOverlay("PAUSED", "PRESS START OR P", "Press START, P, or Enter to Resume", false);
+      pauseBtn.textContent = "RESUME";
+      showOverlay("PAUSED", "TAP OR PRESS ENTER", "Press Enter, P, or tap screen to Resume", false);
     } else if (gameState === "PAUSED") {
       hideOverlay();
+      pauseBtn.textContent = "PAUSE";
       gameState = "PLAYING";
     } else if (gameState === "TITLE" || gameState === "GAME_OVER") {
       startNewGame();
@@ -1514,13 +1335,7 @@
     requestAnimationFrame(loop);
   }
 
-  function setPressed(id, active) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    if (active) el.classList.add("pressed");
-    else el.classList.remove("pressed");
-  }
-
+  // --- Keyboard Controls (Arrows + WASD + Enter/Space/P/M) ---
   const KEY_TO_DIR = {
     ArrowUp: "UP",    KeyW: "UP",
     ArrowDown: "DOWN", KeyS: "DOWN",
@@ -1535,7 +1350,6 @@
     const dirKey = KEY_TO_DIR[e.code] || KEY_TO_DIR[e.key];
     if (dirKey) {
       e.preventDefault();
-      setPressed("btn-" + dirKey, true);
       if (gameState === "TITLE") startNewGame();
       queueDirection(dirKey);
       return;
@@ -1543,95 +1357,95 @@
 
     if (e.code === "Enter" || e.code === "Space") {
       e.preventDefault();
-      setPressed("btn-START", true);
       handleStartAction();
     } else if (e.code === "KeyP") {
       e.preventDefault();
-      setPressed("btn-START", true);
       togglePause();
     } else if (e.code === "KeyM") {
       e.preventDefault();
-      setPressed("btn-SELECT", true);
       toggleMute();
     }
   }
 
-  function onKeyUp(e) {
-    const tag = document.activeElement && document.activeElement.tagName;
-    if (tag === "INPUT" || tag === "TEXTAREA") return;
-
-    const dirKey = KEY_TO_DIR[e.code] || KEY_TO_DIR[e.key];
-    if (dirKey) setPressed("btn-" + dirKey, false);
-    if (e.code === "Enter" || e.code === "Space" || e.code === "KeyP") setPressed("btn-START", false);
-    if (e.code === "KeyM") setPressed("btn-SELECT", false);
-  }
-
   window.addEventListener("keydown", onKeyDown, { passive: false });
-  window.addEventListener("keyup", onKeyUp);
 
   try {
     if (window.parent && window.parent !== window) {
       window.parent.addEventListener("keydown", onKeyDown, { passive: false });
-      window.parent.addEventListener("keyup", onKeyUp);
     }
   } catch (_) {}
 
-  function bindButton(id, onPress) {
-    const el = document.getElementById(id);
-    if (!el) return;
+  // --- Touchscreen & Pointer Controls (Swipe + Tap-to-Steer on Canvas) ---
+  let activePointerId = null;
+  let swipeOriginX = 0;
+  let swipeOriginY = 0;
+  let swipeTriggered = false;
+  const SWIPE_THRESHOLD = 18;
 
-    const press = (e) => {
-      e.preventDefault();
-      playerNameInput.blur();
-      window.focus();
-      el.classList.add("pressed");
-      onPress();
-    };
-    const release = (e) => {
-      if (e) e.preventDefault();
-      el.classList.remove("pressed");
-    };
+  canvas.addEventListener("touchstart", (e) => e.preventDefault(), { passive: false });
+  canvas.addEventListener("touchmove", (e) => e.preventDefault(), { passive: false });
 
-    el.addEventListener("pointerdown", press);
-    el.addEventListener("pointerup", release);
-    el.addEventListener("pointerleave", release);
-    el.addEventListener("pointercancel", release);
-  }
-
-  ["UP", "DOWN", "LEFT", "RIGHT"].forEach(dirKey => {
-    bindButton("btn-" + dirKey, () => {
-      if (gameState === "TITLE") startNewGame();
-      queueDirection(dirKey);
-    });
+  canvas.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    window.focus();
+    ensureAudio();
+    activePointerId = e.pointerId;
+    swipeOriginX = e.clientX;
+    swipeOriginY = e.clientY;
+    swipeTriggered = false;
   });
 
-  const dpadEl = document.getElementById("dpad");
-  let activeDpadDir = null;
-  dpadEl.addEventListener("touchmove", (e) => {
-    e.preventDefault();
-    const touch = e.touches[0];
-    const target = document.elementFromPoint(touch.clientX, touch.clientY);
-    if (target && target.dataset && target.dataset.dir) {
-      const d = target.dataset.dir;
-      if (d !== activeDpadDir) {
-        if (activeDpadDir) setPressed("btn-" + activeDpadDir, false);
-        activeDpadDir = d;
-        setPressed("btn-" + d, true);
-        if (gameState === "TITLE") startNewGame();
-        queueDirection(d);
+  canvas.addEventListener("pointermove", (e) => {
+    if (e.pointerId !== activePointerId) return;
+    const dx = e.clientX - swipeOriginX;
+    const dy = e.clientY - swipeOriginY;
+    if (Math.hypot(dx, dy) >= SWIPE_THRESHOLD) {
+      if (Math.abs(dx) > Math.abs(dy)) {
+        queueDirection(dx > 0 ? "RIGHT" : "LEFT");
+      } else {
+        queueDirection(dy > 0 ? "DOWN" : "UP");
+      }
+      // Reset origin so continuous multi-turn swipes work in one finger stroke
+      swipeOriginX = e.clientX;
+      swipeOriginY = e.clientY;
+      swipeTriggered = true;
+    }
+  });
+
+  function endPointer(e) {
+    if (e.pointerId !== activePointerId) return;
+    if (!swipeTriggered && (gameState === "PLAYING" || gameState === "READY")) {
+      const rect = canvas.getBoundingClientRect();
+      const tapX = ((e.clientX - rect.left) / rect.width) * canvas.width;
+      const tapY = ((e.clientY - rect.top) / rect.height) * canvas.height;
+      const dx = tapX - pacman.x;
+      const dy = tapY - pacman.y;
+      if (Math.hypot(dx, dy) > 8) {
+        if (Math.abs(dx) > Math.abs(dy)) {
+          queueDirection(dx > 0 ? "RIGHT" : "LEFT");
+        } else {
+          queueDirection(dy > 0 ? "DOWN" : "UP");
+        }
       }
     }
-  }, { passive: false });
+    activePointerId = null;
+  }
 
-  dpadEl.addEventListener("touchend", () => {
-    if (activeDpadDir) {
-      setPressed("btn-" + activeDpadDir, false);
-      activeDpadDir = null;
-    }
+  canvas.addEventListener("pointerup", endPointer);
+  canvas.addEventListener("pointercancel", () => {
+    activePointerId = null;
   });
 
-  bindButton("btn-START", handleStartAction);
-  bindButton("btn-SELECT", toggleMute);
+  // --- Utility & Overlay Controls ---
+  pauseBtn.addEventListener("click", () => {
+    window.focus();
+    togglePause();
+  });
+
+  soundBtn.addEventListener("click", () => {
+    window.focus();
+    toggleMute();
+  });
 
   nameBoxEl.addEventListener("click", (e) => e.stopPropagation());
   playerNameInput.addEventListener("keydown", (e) => {
